@@ -85,6 +85,15 @@ class App(ctk.CTk):
             planilha_ativa["B1"] = "Contato"
             planilha_ativa["C1"] = "Endereço"
             planilha_ativa["D1"] = "Idade"
+
+            estilo = PatternFill(start_color='5399FF', end_color='5399FF', fill_type='solid')
+            fonte = Font(bold=True)
+            cabeçalho = ["A1", "B1", "C1", "D1"]
+
+            for elemento in cabeçalho:
+                planilha_ativa[elemento].fill = estilo
+                planilha_ativa[elemento].font = fonte
+                
             planilha.save("Usuários.xlsx")
 
     # Método para salvar os dados preenchidos na planilha Excel
