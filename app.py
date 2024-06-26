@@ -104,26 +104,53 @@ class App(ctk.CTk):
         idade = self.idade_value.get()
 
         # Verifica se todos os campos foram preenchidos
-        if nome == "" or contato == "" or endereço == "" or idade == "":
+        if nome == "" or contato == "" or endereco == "" or idade == "":
             messagebox.showerror("Sistema", "Erro!\nPor favor preencha todos os campos.")
         else:
-            try:
-                # Carrega a planilha existente
-                planilha = openpyxl.load_workbook("Usuários.xlsx")
-                planilha_ativa = planilha.active
+            # Verifica se os dados já existem na planilha
+            if self.verificar_dados_existentes(nome, contato, endereco, idade):
+                messagebox.showwarning("Aviso", "Os dados inseridos já existem na planilha.")
+            else:
+                try:
+                    # Carrega a planilha existente
+                    planilha = openpyxl.load_workbook("Usuários.xlsx")
+                    planilha_ativa = planilha.active
 
-                # Insere os dados na próxima linha disponível
-                planilha_ativa.cell(column=1, row=planilha_ativa.max_row+1, value=nome)
-                planilha_ativa.cell(column=2, row=planilha_ativa.max_row, value=contato)        
-                planilha_ativa.cell(column=3, row=planilha_ativa.max_row, value=endereço)
-                planilha_ativa.cell(column=4, row=planilha_ativa.max_row, value=idade)
+                    # Insere os dados na próxima linha disponível
+                    planilha_ativa.cell(column=1, row=planilha_ativa.max_row+1, value=nome)
+                    planilha_ativa.cell(column=2, row=planilha_ativa.max_row, value=contato)        
+                    planilha_ativa.cell(column=3, row=planilha_ativa.max_row, value=endereco)
+                    planilha_ativa.cell(column=4, row=planilha_ativa.max_row, value=idade)
 
-                planilha.save(r"Usuários.xlsx")  # Salva a planilha atualizada
-                messagebox.showinfo("Sistema", "Dados salvos com sucesso!")  # Exibe mensagem de sucesso
-                self.destroy()  # Fecha a janela após salvar
-    
-            except Exception:
-                messagebox.showerror("Erro", "Ocorreu um erro ao salvar os dados")  # Exibe mensagem de erro em caso de falha
+                    planilha.save(r"Usuários.xlsx")  # Salva a planilha atualizada
+                    messagebox.showinfo("Sistema", "Dados salvos com sucesso!")  # Exibe mensagem de sucesso
+                    self.destroy()  # Fecha a janela após salvar
+
+                except Exception:
+                    messagebox.showerror("Erro", "Ocorreu um erro ao salvar os dados")  # Exibe mensagem de erro em caso de falha
+                
+    # Função para verificar se os dados já existem na planilha
+    def verificar_dados_existentes(self, nome, contato, endereco, idade):
+        try:
+            # Carrega a planilha existente
+            planilha = openpyxl.load_workbook("Usuários.xlsx")
+            planilha_ativa = planilha.active
+
+            # Itera pelas linhas da planilha, exceto a primeira linha (cabeçalho)
+            for linha in planilha_ativa.iter_rows(min_row=2, values_only=True):
+                nome_planilha, contato_planilha, endereco_planilha, idade_planilha = linha
+
+                # Verifica se os dados já existem
+                if (nome_planilha == nome and
+                    contato_planilha == contato and
+                    endereco_planilha == endereco and
+                    idade_planilha == idade):
+                    return True  # Dados encontrados na planilha
+            return False  # Dados não encontrados na planilha
+
+        except Exception:
+            messagebox.showerror("Erro", "Ocorreu um erro ao verificar os dados na planilha")
+            return True  # Considere como encontrado em caso de erro
 
     # Método para limpar todos os campos de entrada
     def limpar_dados(self):
