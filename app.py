@@ -18,7 +18,7 @@ class App(ctk.CTk):
 
     # Configuração geral da interface
     def layout_config(self):
-        self.title("Sistema de Cadastro de Clientes")  # Define o título da janela
+        self.title("Sistema de Cadastro de Usuários")  # Define o título da janela
         self.geometry("700x500")  # Define o tamanho inicial da janela
 
     # Configuração dos elementos visuais da aparência
@@ -31,7 +31,7 @@ class App(ctk.CTk):
     def todo_sistema(self):
         # Cabeçalho da aplicação
         frame = ctk.CTkFrame(master=self, width=700, height=50, corner_radius=0, bg_color="teal", fg_color="teal").place(x=0, y=10)
-        título = ctk.CTkLabel(master=frame, text="Sistema de Cadastro de Clientes", font=("Century Gothic bold", 24), text_color="#fff", bg_color="teal").place(x=180, y=20)
+        título = ctk.CTkLabel(master=frame, text="Sistema de Cadastro de Usuários", font=("Century Gothic bold", 24), text_color="#fff", bg_color="teal").place(x=180, y=20)
         span = ctk.CTkLabel(master=self, text="Preencha todos os campos do formulário!", font=("Century Gothic bold", 16), text_color=["#000", "#fff"]).place(x=50, y=70)
 
         # Variáveis de texto
@@ -75,7 +75,7 @@ class App(ctk.CTk):
 
     # Método para criar o arquivo Excel se não existir
     def define_arquivo(self):
-        caminho_arquivo = pathlib.Path("Clientes.xlsx")
+        caminho_arquivo = pathlib.Path("Usuários.xlsx")
         if not caminho_arquivo.exists():
             planilha = Workbook()
             planilha_ativa = planilha.active
@@ -85,7 +85,7 @@ class App(ctk.CTk):
             planilha_ativa["B1"] = "Contato"
             planilha_ativa["C1"] = "Endereço"
             planilha_ativa["D1"] = "Idade"
-            planilha.save("Clientes.xlsx")
+            planilha.save("Usuários.xlsx")
 
     # Método para salvar os dados preenchidos na planilha Excel
     def salvar_dados(self):
@@ -100,7 +100,7 @@ class App(ctk.CTk):
         else:
             try:
                 # Carrega a planilha existente
-                planilha = openpyxl.load_workbook("Clientes.xlsx")
+                planilha = openpyxl.load_workbook("Usuários.xlsx")
                 planilha_ativa = planilha.active
 
                 # Insere os dados na próxima linha disponível
@@ -109,7 +109,7 @@ class App(ctk.CTk):
                 planilha_ativa.cell(column=3, row=planilha_ativa.max_row, value=endereço)
                 planilha_ativa.cell(column=4, row=planilha_ativa.max_row, value=idade)
 
-                planilha.save(r"Clientes.xlsx")  # Salva a planilha atualizada
+                planilha.save(r"Usuários.xlsx")  # Salva a planilha atualizada
                 messagebox.showinfo("Sistema", "Dados salvos com sucesso!")  # Exibe mensagem de sucesso
                 self.destroy()  # Fecha a janela após salvar
     
